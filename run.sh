@@ -1,2 +1,2 @@
 
-python backend/server.py && npm start --prefix frontend
+python backend/server.py

@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, Switch, Route } from 'react-router-dom';
 import '../css/style.scss';
 
+
 //components
 import Home from './Home.jsx';
 import Test from './Test.jsx';
