@@ -1,11 +1,17 @@
 import React from 'react';
+import { NavLink, Switch, Route } from 'react-router-dom';
+
+//components
+import Home from './Home.jsx';
+import Test from './Test.jsx';
 
 class App extends React.Component {
     render() {
         return (
-            <div>
-                Hello World!!!
-         </div>
+            <Switch>
+                <Route exact path="/" component={Home}></Route>
+                <Route exact path="/test" component={Test}></Route>
+            </Switch>
         );
     }
 }
