@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 export default class Input extends React.Component{
 
@@ -12,6 +13,13 @@ export default class Input extends React.Component{
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount(){
+        console.log("HELLO")
+        axios.get('http://localhost:3000/test').then(res => {
+            console.log(res.data);
+        })
     }
 
     handleChange(event) {
@@ -45,8 +53,7 @@ export default class Input extends React.Component{
                             <option value="ETH">ETH</option>
                             <option value="LTC">LTC</option>
                             <option value="USD">USD</option>
-                        </select>
-                         <br/><br/>
+                        </select><br/>
                         <input className="btn btn-primary" type="submit" value="Submit" />
                     </form>
                 </div>

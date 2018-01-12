@@ -1,11 +1,10 @@
 
-#add-coin-form input{
+#add-coin-form .form-control{
     display: inline;
     width: 20%;
     margin-right: 3%;
 }
 
-#add-coin-form select{
-    display: inline;
-    width: 14%;
+#add-coin-form .btn{
+    margin-top: 2%;
 }
