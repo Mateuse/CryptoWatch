@@ -6,9 +6,16 @@ export default class Header extends React.Component{
         return(
             <div id="header">
                 <div id="header-content">
-                    <a href="/">
-                        <img id="logo" src={require('../images/logo.png')} />
-                    </a>
+                    <span className="logo-container">
+                        <a id="logo-link" href="/">
+                            <img id="logo" src={require('../images/logo.png')} />
+                        </a>
+                    </span>
+                    <span className="nav-link-container">
+                        <a href="/input">
+                            <span className="link">Input</span>
+                        </a>
+                    </span>
                 </div>
             </div>
         );
