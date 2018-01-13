@@ -8,18 +8,16 @@ export default class Input extends React.Component{
         this.state = { 
             coinName: '',
             price: '',
-            currency: '' 
+            currency: '',
+            selectedCoin: [] 
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.searchCoin = this.searchCoin.bind(this);
     }
 
     componentDidMount(){
-        console.log("HELLO")
-        axios.get('http://localhost:3000/test').then(res => {
-            console.log(res.data);
-        })
+
     }
 
     handleChange(event) {
@@ -29,9 +27,17 @@ export default class Input extends React.Component{
         this.setState({[name]: target.value});
     }
 
-    handleSubmit(event) {
-        alert('A name was submitted: ' + this.state.coinName + " " + this.state.price + "\n" + this.state.currency);
-        event.preventDefault();
+    searchCoin() {
+        const coinName = {"name": this.state.coinName};
+        if(coinName['name'] !== ""){
+            axios.post("http://localhost:3001/searchCoin", coinName)
+            .then((res) => {
+                console.log(res.data);
+                this.setState({'selectedCoin': res.data});
+            }).catch((err) => {
+                console.log(err);
+            }) 
+        }           
     }
     
     render(){
@@ -40,24 +46,27 @@ export default class Input extends React.Component{
                 <div className="row">
                     <h3>Add a Coin</h3><br/>
                 </div>
-                <div className="row">
-                    <form id="add-coin-form" onSubmit={this.handleSubmit}>
+                <div id="add-coin" className="row">
                         <input type="text" name="coinName" className="form-control" placeholder="Coin Name" 
                         value={this.state.coinName} onChange={this.handleChange} />
-                        <input type="text" name="price" className="form-control" placeholder="Price"
-                        value={this.state.price} onChange={this.handleChange} />
-                        <select value={this.state.currency}  onChange={this.handleChange} 
-                        name="currency" className="form-control"> 
-                            <option value="">Select Currency</option>
-                            <option value="BTC">BTC</option>
-                            <option value="ETH">ETH</option>
-                            <option value="LTC">LTC</option>
-                            <option value="USD">USD</option>
-                        </select><br/>
-                        <input className="btn btn-primary" type="submit" value="Submit" />
-                    </form>
+                        
+                        <button onClick={this.searchCoin.bind(this)} className="btn btn-primary">
+                            Search
+                        </button>
                 </div>
+                
             </div>            
         );
     }
 }
+
+{/* <input type="text" name="price" className="form-control" placeholder="Price"
+    value={this.state.price} onChange={this.handleChange} />
+    <select value={this.state.currency} onChange={this.handleChange}
+        name="currency" className="form-control">
+        <option value="">Select Currency</option>
+        <option value="BTC">BTC</option>
+        <option value="ETH">ETH</option>
+        <option value="LTC">LTC</option>
+        <option value="USD">USD</option>
+    </select> <br /> */}
