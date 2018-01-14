@@ -30,7 +30,7 @@ export default class Input extends React.Component{
     searchCoin() {
         const coinName = {"name": this.state.coinName};
         if(coinName['name'] !== ""){
-            axios.post("http://localhost:3001/searchCoin", coinName)
+            axios.post("http://localhost:3001/coinSearch", coinName)
             .then((res) => {
                 console.log(res.data);
                 this.setState({'selectedCoin': res.data});
@@ -53,6 +53,8 @@ export default class Input extends React.Component{
                         <button onClick={this.searchCoin.bind(this)} className="btn btn-primary">
                             Search
                         </button>
+
+                        {this.state.selectedCoin['name']}
                 </div>
                 
             </div>            

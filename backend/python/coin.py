@@ -10,7 +10,7 @@ class Coin:
         self.market_cap_usd = market_cap_usd
         self.available_supply = available_supply
         
-    def toString(self):
+   def toString(self):
         return {
                 "name": self.name,
                 "symbol": self.symbol,
