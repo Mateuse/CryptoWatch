@@ -27,7 +27,7 @@ export default class Input extends React.Component{
         this.setState({[name]: target.value});
     }
 
-    searchCoin() {
+    searchCoin(event) {
         const coinName = {"name": this.state.coinName};
         if(coinName['name'] !== ""){
             axios.post("http://localhost:3001/coinSearch", coinName)
@@ -37,7 +37,8 @@ export default class Input extends React.Component{
             }).catch((err) => {
                 console.log(err);
             }) 
-        }           
+        } 
+        event.preventDefault();          
     }
     
     render(){
@@ -47,14 +48,12 @@ export default class Input extends React.Component{
                     <h3>Add a Coin</h3><br/>
                 </div>
                 <div id="add-coin" className="row">
+                    <form id="add-coin-form" onSubmit={this.searchCoin}>
                         <input type="text" name="coinName" className="form-control" placeholder="Coin Name" 
                         value={this.state.coinName} onChange={this.handleChange} />
                         
-                        <button onClick={this.searchCoin.bind(this)} className="btn btn-primary">
-                            Search
-                        </button>
-
-                        {this.state.selectedCoin['name']}
+                        <input className="btn btn-primary" type="submit" value="Search" />
+                    </form>
                 </div>
                 
             </div>            
