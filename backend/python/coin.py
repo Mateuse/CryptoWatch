@@ -3,7 +3,8 @@ import json, urllib2, datetime
 class Coin:
 
    def __init__(self, id, name, symbol, rank, price_btc, price_usd,
-                market_cap_usd, available_supply):
+                market_cap_usd, available_supply, quantity, current_value,
+                bought_price_USD, bought_price_total_USD):
         self.id = id
         self.name = name
         self.symbol = symbol
@@ -12,8 +13,10 @@ class Coin:
         self.price_usd = price_usd
         self.market_cap_usd = market_cap_usd
         self.available_supply = available_supply
-        self.bought_price_USD = 0
-        self.bought_price_total_USD = 0
+        self.quantity = quantity
+        self.current_value = current_value
+        self.bought_price_USD = bought_price_USD
+        self.bought_price_total_USD = bought_price_total_USD
    
    def find_month(self, dateString):   
         return {
@@ -47,6 +50,12 @@ class Coin:
         start = self.find_nth(date_prices, "<td>", 2)
 
         return date_prices[start + 4: end]
+   
+   def set_quantity(self, quantity):
+        self.quantity = quantity
+
+   def set_current_value(self):
+        self.current_value = float(self.quantity) * float(self.price_usd)
 
    def set_bought_price_USD(self, price, currency, quantity, date, current_price):
         if str(date) == str(datetime.datetime.now().date()):
@@ -78,13 +87,16 @@ class Coin:
 
    def to_string(self):
         return {
+                "id": self.id,
                 "name": self.name,
                 "symbol": self.symbol,
                 "rank": self.rank,
                 "price_btc": self.price_btc,
                 "price_usd": self.price_usd,
                 "market_cap_usd": self.market_cap_usd,
-                "available_supply": self.market_cap_usd,
+                "available_supply": self.available_supply,
+                "quantity": self.quantity,
+                "current_value": self.current_value,
                 "bought_price_USD": self.bought_price_USD,
                 "bought_price_total_USD": self.bought_price_total_USD
                }     
