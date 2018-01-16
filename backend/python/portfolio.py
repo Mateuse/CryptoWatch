@@ -17,6 +17,6 @@ class Portfolio:
     def set_total_value(self):
         total = 0
         for coin in self.coins:
-            total = total + self.coins[coin]['current_value']            
+            total = total + self.coins[coin]['bought_price_total_USD']            
 
         self.total_value = total

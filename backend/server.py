@@ -16,10 +16,7 @@ def initialize_portfolio():
     portfolio = Portfolio()
 
     for coin in portfolio_db:
-        coin = Coin(coin['id'], coin['name'], coin['symbol'], 
-               coin['rank'], coin['price_btc'], coin['price_usd'],
-               coin['market_cap_usd'], coin['available_supply'], 
-               coin['quantity'], coin['current_value'], 
+        coin = Coin(coin['id'], coin['name'], coin['symbol'], coin['quantity'], 
                coin['bought_price_USD'], coin['bought_price_total_USD'])
         
         portfolio.add_coin(coin)
@@ -41,9 +38,21 @@ def portfolio_route():
 
     return json.dumps(portfolio.coins)
 
-@app.route("/totalValue")
-def total_value_route():    
-    return str(portfolio.total_value)
+@app.route('/updatePrice')
+def update_price():
+    current_prices = {}
+
+    for coin in portfolio.coins:
+        try: 
+            coin_price = urllib2.urlopen("https://api.coinmarketcap.com/v1/ticker/" + coin).read()
+            coin_price = json.loads(coin_price)
+            
+            current_prices.update({coin: coin_price[0]['price_usd']})
+        except Exception as e:
+            print e
+            return "Not Found"
+    
+    return json.dumps(current_prices)
 
 @app.route("/coinSearch", methods=["POST"])
 def coin_search():
@@ -53,9 +62,7 @@ def coin_search():
         coin = urllib2.urlopen("https://api.coinmarketcap.com/v1/ticker/" + data['name']).read()
         coin = json.loads(coin)
 
-        coin_data = Coin(coin[0]['id'], coin[0]['name'], coin[0]['symbol'], coin[0]['rank'], 
-                    coin[0]['price_btc'], coin[0]['price_usd'], coin[0]['market_cap_usd'], 
-                    coin[0]['available_supply'], 0, 0, 0, 0)    
+        coin_data = Coin(coin[0]['id'], coin[0]['name'], coin[0]['symbol'], 0, 0, 0)    
         
         coin_list.add_coin(coin_data)
 
@@ -67,16 +74,15 @@ def coin_search():
 
 @app.route("/addPrice", methods=["POST"])
 def add_price():
-    data = json.loads(request.data)
-    print data['name']
+    data = json.loads(request.data)    
 
     try:
         current_coin = coin_list.find_coin(data['name'])
         current_coin.set_quantity(data['quantity'])
         current_coin.set_current_value()
-
+        
         current_coin.set_bought_price_USD(data['price'], data['currency'], data['quantity'],
-                                        data['date'], current_coin.price_usd)
+                                        data['date'], current_coin.bought_price_USD)
         
         db.portfolio.insert(current_coin.to_string())
         portfolio.add_coin(current_coin)
@@ -86,6 +92,8 @@ def add_price():
     except Exception as e:
         print e
         return "Error adding Coin"
+
+
 
 @app.route("/test")
 def test():
