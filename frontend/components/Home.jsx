@@ -8,8 +8,12 @@ function roundFunction(num, decimals) {
         var decimalIndex = numString.indexOf('.') + 1;
         return numString.substr(0, decimalIndex + decimals);        
     }
-    else{        
-        return numString + ".0000";
+    else{
+        numString = numString.concat(".");
+        for(var x=0; x < decimals; x++){
+            numString = numString.concat("0");
+        }        
+        return numString;
     }
 }
 
