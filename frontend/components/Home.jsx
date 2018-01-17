@@ -1,6 +1,18 @@
 import React from 'react';
 import axios from 'axios';
 
+function roundFunction(num, decimals) {
+    var numString = num.toString();
+
+    if (numString.includes('.')) {
+        var decimalIndex = numString.indexOf('.') + 1;
+        return numString.substr(0, decimalIndex + decimals);        
+    }
+    else{        
+        return numString + ".0000";
+    }
+}
+
 
 export default class Home extends React.Component{
 
@@ -12,7 +24,7 @@ export default class Home extends React.Component{
             totalValue: 0
         }
     }
-    
+
     componentDidMount(){
         axios.get('http://localhost:3001/portfolio').then((res) => {
             var tempArray = this.state.portfolio.slice();
@@ -35,7 +47,7 @@ export default class Home extends React.Component{
                         }
                     }
                 }
-            
+
                 this.setState({'portfolio': tempArray})
                 this.setState({'totalValue': totalValue})
                 this.setState({'totalInvested': totalInvested})
@@ -44,6 +56,7 @@ export default class Home extends React.Component{
             });           
    
         }).catch((err) => {
+
             console.log(err)
         });
     }
@@ -66,18 +79,18 @@ export default class Home extends React.Component{
                         {this.state.portfolio.map((coin, i) => {
                             return (<tr className="coin-data" key={i}>
                                         <td><a href={'https://coinmarketcap.com/currencies/' + coin.name}>{coin.name}</a> ({coin.symbol})</td>
-                                        <td className="table-data">{Math.round(coin.quantity * 100) / 100}</td>
-                                        <td className="table-data">{Math.round(coin.price_usd * 100) / 100}</td>
-                                        <td className="table-data">{Math.round(coin.bought_price_USD * 100) / 100}</td>
-                                        <td className="table-data">{Math.round(coin.bought_price_USD * coin.quantity * 100) / 100}</td>
-                                        <td className="table-data">{Math.round(coin.price_usd * coin.quantity * 100) / 100}</td>
+                                        <td className="table-data">{roundFunction(coin.quantity, 2)}</td>
+                                        <td className="table-data">{roundFunction(coin.price_usd, 4)}</td>
+                                        <td className="table-data">{roundFunction(coin.bought_price_USD, 4)}</td>
+                                        <td className="table-data">{roundFunction(coin.bought_price_USD * coin.quantity, 2)}</td>
+                                        <td className="table-data">{roundFunction(coin.price_usd * coin.quantity, 2)}</td>
                                     </tr>)
                         })}
                     </tbody>
                 </table>
                 <div>
-                   <h3>Current Invested: ${this.state.totalInvested} USD<br/></h3>
-                   <h3>Current Value: ${this.state.totalValue} USD</h3>
+                   <h3>Current Invested: ${roundFunction(this.state.totalInvested, 2)} USD<br/></h3>
+                   <h3>Current Value: ${roundFunction(this.state.totalValue, 2)} USD</h3>
                 </div>
                     
             </div>
